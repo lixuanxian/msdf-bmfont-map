@@ -1,26 +1,26 @@
-# msdf-bmfont-xml
+# msdf-bmfont-map
 
-[![Build Status](https://travis-ci.org/soimy/msdf-bmfont-xml.svg?branch=master)](https://travis-ci.org/soimy/msdf-bmfont-xml)
-[![npm version](https://badge.fury.io/js/msdf-bmfont-xml.svg)](https://badge.fury.io/js/msdf-bmfont-xml)
-![npm](https://img.shields.io/npm/dm/msdf-bmfont-xml.svg)
+[![Build Status](https://travis-ci.org/soimy/msdf-bmfont-map.svg?branch=master)](https://travis-ci.org/soimy/msdf-bmfont-map)
+[![npm version](https://badge.fury.io/js/msdf-bmfont-map.svg)](https://badge.fury.io/js/msdf-bmfont-map)
+![npm](https://img.shields.io/npm/dm/msdf-bmfont-map.svg)
 
 Converts a `.ttf` font file into multichannel signed distance fields, then outputs packed spritesheets and a xml(.fnt} or json representation of an AngelCode BMfont.
 
 Signed distance fields are a method of reproducing vector shapes from a texture representation, popularized in [this paper by Valve](http://www.valvesoftware.com/publications/2007/SIGGRAPH2007_AlphaTestedMagnification.pdf).
 This tool uses [Chlumsky/msdfgen](https://github.com/Chlumsky/msdfgen) to generate multichannel signed distance fields to preserve corners. The distance fields are created from vector fonts, then rendered into texture pages. A BMFont object is provided for character layout.
 
-![Preview image](https://raw.githubusercontent.com/soimy/msdf-bmfont-xml/master/assets/msdf-bmfont-xml.png)
+![Preview image](https://raw.githubusercontent.com/soimy/msdf-bmfont-map/master/assets/msdf-bmfont-map.png)
 
 ## Install as CLI
 
 ```bash
-npm install msdf-bmfont-xml -g
+npm install msdf-bmfont-map -g
 ```
 
 Then you just need to call `msdf-bmfont` from console to generate font file.
 Type in `msdf-bmfont --help` for more detail usage.
 
-![Console-Demo](https://raw.githubusercontent.com/soimy/msdf-bmfont-xml/master/assets/console-demo.gif)
+![Console-Demo](https://raw.githubusercontent.com/soimy/msdf-bmfont-map/master/assets/console-demo.gif)
 
 ### Usage
 
@@ -31,7 +31,7 @@ Creates a BMFont compatible bitmap font of signed distance fields from a font fi
 
 Options:
   -V, --version                 output the version number
-  -f, --output-type <format>    font file format: xml(default) | json (default: "xml")
+  -f, --output-type <format>    font file format: json (default: "json")
   -o, --filename <atlas_path>   filename of font textures (defaut: font-face)
                                 font filename always set to font-face name
   -s, --font-size <fontSize>    font size for generated textures (default: 42)
@@ -62,7 +62,7 @@ msdf-bmfont --reuse -o path/to/atlas.png -m 512,256 -s 42 -r 3 -p 1 -t msdf path
 
 We will get three file: `atlas.0.png` `atlas.0.cfg` & `font.fnt` and this is the generated atlas in the minimum pot size (256x256):
 
-![Atlas0](https://raw.githubusercontent.com/soimy/msdf-bmfont-xml/master/assets/atlas.0.png)
+![Atlas0](https://raw.githubusercontent.com/soimy/msdf-bmfont-map/master/assets/atlas.0.png)
 
 Then we want to use the old setting except a different font and use monochrome signed distance field atlas, and output an extra `.svg` version of atlas:
 
@@ -72,20 +72,20 @@ msdf-bmfont -v -u path/to/atlas.0.cfg -t sdf -p 0 -r 8 path/to/anotherfont.ttf
 
 This time we get a modified `atlas.0.png` with new bitmap font appended:
 
-![Atlas1](https://raw.githubusercontent.com/soimy/msdf-bmfont-xml/master/assets/atlas.1.jpg)
+![Atlas1](https://raw.githubusercontent.com/soimy/msdf-bmfont-map/master/assets/atlas.1.jpg)
 
 Not satisfied with the style? Remember we got a `svg` atlas!
 
-![svg](https://raw.githubusercontent.com/soimy/msdf-bmfont-xml/master/assets/svg.png)
+![svg](https://raw.githubusercontent.com/soimy/msdf-bmfont-map/master/assets/svg.png)
 
 How about fire up some graphic editor and add some neat effect and lay on the output atlas?
 
-![final](https://raw.githubusercontent.com/soimy/msdf-bmfont-xml/master/assets/atlas.2.jpg)
+![final](https://raw.githubusercontent.com/soimy/msdf-bmfont-map/master/assets/atlas.2.jpg)
 
 ## Install as Module
 
 ```bash
-npm install msdf-bmfont-xml
+npm install msdf-bmfont-map
 ```
 
 ### Module usage Examples
@@ -93,7 +93,7 @@ npm install msdf-bmfont-xml
 Writing the distance fields and font data to disk:
 
 ```js
-const generateBMFont = require('msdf-bmfont-xml');
+const generateBMFont = require('msdf-bmfont-map');
 const fs = require('fs');
 
 generateBMFont('Some-Font.ttf', (error, textures, font) => {
@@ -112,7 +112,7 @@ generateBMFont('Some-Font.ttf', (error, textures, font) => {
 Generating a single channel signed distance field with a custom character set:
 
 ```js
-const generateBMFont = require('msdf-bmfont');
+const generateBMFont = require('msdf-bmfont-map');
 
 const opt = {
   charset: 'ABC.ez_as-123!',
@@ -132,7 +132,7 @@ Renders a bitmap font from the font specified by `fontPath` or `fontBuffer`, wit
 Options:
 
 - `outputType` (String)
-  - type of output font file. Defaults to `xml`
+  - type of output font file. Defaults to `json`
     - `xml` a BMFont standard .fnt file which is wildly supported.
     - `json` a JSON file compatible with [Hiero](https://github.com/libgdx/libgdx/wiki/Hiero)
 - `filename` (String)

@@ -28,7 +28,7 @@ module.exports = generateBMFont;
  *
  * @param {string|Buffer} fontPath - Path or Buffer for the input ttf/otf/woff font
  * @param {Object} opt - Options object for generating bitmap font (Optional) :
- *            outputType : font file format Avaliable: xml(default), json
+ *            outputType : font file format Avaliable: json(default)
  *            filename : filename of both font file and font textures
  *            fontSize : font size for generated textures (default 42)
  *            charset : charset in generated font, could be array or string (default is Western)
@@ -77,7 +77,7 @@ function generateBMFont (fontPath, opt, callback) {
       reuse = cfg.opt;
     }
   } else reuse = {};
-  const outputType = opt.outputType = utils.valueQueue([opt.outputType, reuse.outputType, "xml"]);
+  const outputType = opt.outputType = utils.valueQueue([opt.outputType, reuse.outputType, "json"]);
   let filename = utils.valueQueue([opt.filename, reuse.filename]);
   const distanceRange = opt.distanceRange = utils.valueQueue([opt.distanceRange, reuse.distanceRange, 4]);
   const fontSize = opt.fontSize = utils.valueQueue([opt.fontSize, reuse.fontSize, 42]);
@@ -120,7 +120,7 @@ function generateBMFont (fontPath, opt, callback) {
     tag: false,
     border: border
   });
-  const chars = [];
+  const charsMap = {};
 
   charset = charset.filter((e, i, self) => {
     return (i == self.indexOf(e)) && (!controlChars.includes(e));
@@ -214,7 +214,27 @@ function generateBMFont (fontPath, opt, callback) {
         charData.x = rect.x;
         charData.y = rect.y;
         charData.page = index;
-        chars.push(rect.data.fontData);
+        charsMap[rect.data.fontData.char] = {
+          id: charData.id,
+          w: charData.width,
+          h: charData.height,
+          x:charData.x,
+          y:charData.y
+        };
+
+        if(index > 0){
+          charsMap[rect.data.fontData.char].p = index;
+        }
+        if(charData.xadvance != 0){
+          charsMap[rect.data.fontData.char].xA = charData.xadvance;
+        }
+        if(charData.xoffset != 0){
+          charsMap[rect.data.fontData.char]._x = charData.xoffset;
+        }
+        if(charData.yoffset != 0){
+          charsMap[rect.data.fontData.char]._y = charData.yoffset;
+        }
+        // chars.push(rect.data.fontData);
       });
       const buffer = await img.getBufferAsync(Jimp.MIME_PNG);
       let tex = {
@@ -227,23 +247,19 @@ function generateBMFont (fontPath, opt, callback) {
 
     const asyncTextures = await Promise.all(textures);
 
-    const kernings = [];
+    const kerningsMap = {};
     charset.forEach(first => {
       charset.forEach(second => {
         const amount = font.getKerningValue(font.charToGlyph(first), font.charToGlyph(second));
         if (amount !== 0) {
-          kernings.push({
-            first: first.charCodeAt(0),
-            second: second.charCodeAt(0),
-            amount: amount * (fontSize / font.unitsPerEm)
-          });
+          kerningsMap[`${first}${second}`] = amount * (fontSize / font.unitsPerEm);
         }
       });
     });
 
     const fontData = {
       pages,
-      chars,
+      charsMap,
       info: {
         face: fontface,
         size: fontSize,
@@ -273,7 +289,7 @@ function generateBMFont (fontPath, opt, callback) {
         fieldType: fieldType,
         distanceRange: distanceRange
       },
-      kernings: kernings
+      kerningsMap
     };
     if(roundDecimal !== null) utils.roundAllValue(fontData, roundDecimal, true);
     let fontFile = {};

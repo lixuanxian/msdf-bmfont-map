@@ -1,6 +1,6 @@
 {
-  "name": "msdf-bmfont-xml",
-  "version": "2.5.4",
+  "name": "msdf-bmfont-map",
+  "version": "1.0.0",
   "description": "Creates a BMFont compatible bitmap font of Signed-Distance Fields from a font file",
   "main": "index.js",
   "scripts": {
@@ -53,7 +53,6 @@
     "handlebars": "^4.7.2",
     "is-invalid-path": "^1.0.2",
     "jimp": "^0.6.0",
-    "js2xmlparser": "^4.0.0",
     "map-limit": "0.0.1",
     "maxrects-packer": "^2.4.0-alpha.0",
     "opentype.js": "^0.11.0",
@@ -61,7 +60,6 @@
   },
   "devDependencies": {
     "cz-conventional-changelog": "^2.1.0",
-    "load-bmfont": "^1.4.0",
     "open": "^6.3.0",
     "rimraf": "^2.6.3",
     "run-parallel": "^1.1.9",
@@ -70,8 +68,7 @@
     "three": "^0.102.1",
     "three-bmfont-text": "^2.3.0",
     "tslint": "^5.14.0",
-    "typescript": "^3.3.3333",
-    "xml2js": "^0.4.19"
+    "typescript": "^3.3.3333"
   },
   "config": {
     "commitizen": {

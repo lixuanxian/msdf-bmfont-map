@@ -251,8 +251,9 @@ function generateBMFont (fontPath, opt, callback) {
     charset.forEach(first => {
       charset.forEach(second => {
         const amount = font.getKerningValue(font.charToGlyph(first), font.charToGlyph(second));
-        if (amount !== 0) {
-          kerningsMap[`${first}${second}`] = amount * (fontSize / font.unitsPerEm);
+        const kerning = amount * (fontSize / font.unitsPerEm);
+        if (kerning !== 0 ) {
+          kerningsMap[`${first}${second}`] = kerning;
         }
       });
     });

@@ -97,9 +97,11 @@ function generateBMFont (fontPath, opt, callback) {
   const tolerance = opt.tolerance = utils.valueQueue([opt.tolerance, reuse.tolerance, 0]);
   const isRTL = opt.rtl = utils.valueQueue([opt.rtl, reuse.rtl, false]);
   const allowRotation = opt.rot = utils.valueQueue([opt.rot, reuse.rot, false]);
+  opt.charset = typeof opt.charset === 'string' && (/^\[.+\]$/igm).test(opt.charset) ? JSON.parse(opt.charset) : opt.charset;
   if (isRTL) opt.charset = reshaper.convertArabic(opt.charset);
-  let charset = opt.charset = (typeof opt.charset === 'string' ? Array.from(opt.charset) : opt.charset) || reuse.charset || defaultCharset;
-
+  opt.charset = (typeof opt.charset === 'string' ? Array.from(opt.charset) : opt.charset) || reuse.charset || defaultCharset;
+  opt.charset = opt.charset.map(c => typeof c ==='string' ? c : String.fromCharCode(c));
+  let charset = opt.charset;
   // TODO: Validate options
   if (fieldType !== 'msdf' && fieldType !== 'sdf' && fieldType !== 'psdf') {
     throw new TypeError('fieldType must be one of msdf, sdf, or psdf');
@@ -253,7 +255,7 @@ function generateBMFont (fontPath, opt, callback) {
         const amount = font.getKerningValue(font.charToGlyph(first), font.charToGlyph(second));
         const kerning = amount * (fontSize / font.unitsPerEm);
         if (kerning !== 0 ) {
-          kerningsMap[`${first}${second}`] = kerning;
+          kerningsMap[`${String(first).charCodeAt(0)}-${String(second).charCodeAt(0)}`] = kerning;
         }
       });
     });
